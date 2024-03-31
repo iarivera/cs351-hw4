@@ -1,3 +1,5 @@
+#!/bin/python3
+
 import string
 import random
 import sys
