@@ -21,7 +21,11 @@ def main():
     for key in list(char_dict):
         if not key.isalpha():
             del char_dict[key]
-    # create a table mapping each letter to its frequency
+    # print(json.dumps(char_dict, indent=4, sort_keys=True))
+    frqanal.prettyPrintByFreq(char_dict)
+
+    # replace first four characters by frequency
+    
 
 if __name__ == '__main__':
     main()
