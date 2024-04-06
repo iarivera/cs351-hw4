@@ -1,25 +1,20 @@
+import string
 import json
 
-# returns dict from characters in file
-def charAnalysis(file):
+# returns dict from characters in string
+def charAnalysis(text):
     d = {}
-    with open(file, 'r') as r:
-        for line in r:
-            for char in line:
-                char = char.upper()
-                if char not in d:
-                    d[char] = 1
-                else:
-                    d[char] += 1
-    # remove all non-alphabet
-    for key in list(d):
-        if not key.isalpha():
-            del d[key]
+    text = text.upper()
+    for char in string.ascii_uppercase:
+        d[char] = text.count(char)
     return d
 
-def prettyPrintByFreq(d):
-    for k, v in sorted(d.items(), key=lambda item: item[1], reverse=True):
-        print(f"{k}: {v}")
+def sortedFreq(d, PRINT=False):
+    ret = sorted(d.items(), key=lambda item: item[1], reverse=True)
+    if PRINT:
+        for k, v in ret:
+            print(f"{k}: {v}")
+    return ret
 
 def replace(text, char1, char2):
     text = text.replace(char1, 'a') # all ciphers are upper

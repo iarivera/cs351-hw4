@@ -15,17 +15,22 @@ def main():
     else:
         file = input("filename: ")
 
+    text = ''
+    for line in open(file):
+        text += line
+
     # calculate frequency of each letter in ciphertext
-    char_dict = frqanal.charAnalysis(file)
-    # remove all non-alphabet
-    for key in list(char_dict):
-        if not key.isalpha():
-            del char_dict[key]
-    # print(json.dumps(char_dict, indent=4, sort_keys=True))
-    frqanal.prettyPrintByFreq(char_dict)
+    char_dict = frqanal.charAnalysis(text)
+    frq = frqanal.sortedFreq(char_dict, True)
 
     # replace first four characters by frequency
-    
+    for i in range(4):
+        letter = 'ETAO'[i]
+        text = frqanal.replace(text, letter, frq[i][0])
+        char_dict = frqanal.charAnalysis(text)
+        frq = frqanal.sortedFreq(char_dict)
+    print(text)
+    frqanal.sortedFreq(char_dict, True)
 
 if __name__ == '__main__':
     main()
