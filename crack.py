@@ -4,16 +4,30 @@ import sys
 import json
 import frqanal
 import string
+import curses
+from curses import wrapper
+from curses.textpad import Textbox, rectangle
 # most common characters in english, in order:
 # ETAOINSHRDL
 
-def main():
+def main(stdscr):
     # prompt user for file
+    stdscr.clear()
     if len(sys.argv) > 1:
         file = sys.argv[1]
-        print(f"using file {file}")
+        #print(f"using file {file}")
+        stdscr.addstr(f"Using file {file}")
+        stdscr.refresh()
     else:
-        file = input("filename: ")
+        #file = input("filename: ")
+        
+        win = curses.newwin(1, 79, 1, 1)
+        rectangle(stdscr, 0, 0, 2, 80)
+        stdscr.refresh()
+        box = Textbox(win)
+        box.edit()
+        file = box.gather().strip().replace("\n", "")
+        stdscr.getch()
 
     text = ''
     for line in open(file):
@@ -21,16 +35,26 @@ def main():
 
     # calculate frequency of each letter in ciphertext
     char_dict = frqanal.charAnalysis(text)
-    frq = frqanal.sortedFreq(char_dict, True)
+    frq = frqanal.sortedFreq(char_dict, False)
+    frqwin = curses.newwin(30, 34, 3, 0)
+    #frqwin.border()
+    #frqwin.refresh()
+    for i, item in enumerate(frq):
+        frqwin.addstr(i, 0, str(item))
+    frqwin.refresh()
 
     mapping={}
     invMapping={}
     inp=""
     # replace characters by frequency. Allow for the choice of how many letters should be replaced as lower frequency letters can produce inconsistent results
     while(not inp.isnumeric() or inp=="" or int(inp)>26):
-        inp=input("Input how many letters to replace in the cipher (1-26)")
+        #inp=input("Input how many letters to replace in the cipher (1-26)")
+        #rectangle(stdscr, 6, 0, 10, 80)
+        #stdscr.addstr("Input how many letters to replace in the cipher (1-26)")
+        stdscr.refresh()
     inp=int(inp)
     print("Mappings:")
+    #stdscr.addstr("Mappings:")
     for i in range(inp):
         # Letter frequency order gotten from:https://en.wikipedia.org/wiki/Letter_frequency
         letter = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'[i]
@@ -38,6 +62,7 @@ def main():
         mapping[cipherL]=letter
         invMapping[letter]=cipherL
         print(f"{cipherL}->{letter}")
+        #stdscr.addstr(f"{cipherL}->{letter}")
         # char_dict = frqanal.charAnalysis(text)
         # frq = frqanal.sortedFreq(char_dict)
 
@@ -86,4 +111,5 @@ def main():
     # frqanal.sortedFreq(mapping, True)
 
 if __name__ == '__main__':
-    main()
+    #main(stdscr)
+    wrapper(main)
