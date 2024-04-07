@@ -16,7 +16,11 @@ def main(stdscr):
     if len(sys.argv) > 1:
         file = sys.argv[1]
         #print(f"using file {file}")
-        stdscr.addstr(f"Using file {file}")
+        win = curses.newwin(1, 79, 1, 1)
+        rectangle(stdscr, 0, 0, 2, 80)
+        stdscr.refresh()
+        box = Textbox(win)
+        stdscr.addstr(1, 1, f"Using file {file}")
         stdscr.refresh()
     else:
         #file = input("filename: ")
@@ -36,7 +40,7 @@ def main(stdscr):
     # calculate frequency of each letter in ciphertext
     char_dict = frqanal.charAnalysis(text)
     frq = frqanal.sortedFreq(char_dict, False)
-    frqwin = curses.newwin(30, 34, 5, 1)
+    #frqwin = curses.newwin(30, 34, 5, 1)
     rectangle(stdscr, 3, 0, 31, 35)
     #frqwin.border()
     #frqwin.refresh()
