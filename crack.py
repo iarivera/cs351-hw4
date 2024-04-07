@@ -45,40 +45,44 @@ def main():
     while(True):
         print("\nCurrent Ciphertext:\n"+frqanal.replace(text, mapping))
         print("Original Ciphertext:\n"+text)
-        while(inp!="2" and inp!="1"):
-            inp=input("What would you like to do now?\n (1) New Mapping\n (2) Done\n")
-        if(inp=="2"):
-            exit()
-
-        while(not (inp in string.ascii_uppercase) or inp==""):
-            inp=input("What cipher character are you replacing?\n")
-        cipherL=inp
         inp=""
-        while(not (inp in string.ascii_uppercase) or inp==""):
-            inp=input("What character should it be replaced with?\n")
-        letter=inp
-        inp=input(f'Type (Y) to add mapping "{cipherL} -> {letter}"\n')
-        if(inp=="Y"):
-            # Following statements account for the fact mapping is 1 to 1 operation
-            if(cipherL in mapping):
-                if(letter in invMapping):
-                    mapping[invMapping[letter]]=mapping[cipherL]
-                    mapping[cipherL]=letter
-                    invMapping={v: k for k, v in mapping.items()}
+        while(inp!="2" and inp!="1" and inp!="3"):
+            inp=input("What would you like to do now?\n(1) New Mapping\n(2) Show Mappings\n(3) Done\n")
+        if(inp=="3"):
+            exit()
+        elif(inp=="2"):
+            for i in mapping:
+                print(f"{i}->{mapping[i]}")
+        elif(inp=="1"):
+            while(not (inp in string.ascii_uppercase) or inp==""):
+                inp=input("What cipher character are you replacing?\n")
+            cipherL=inp
+            inp=""
+            while(not (inp in string.ascii_uppercase) or inp==""):
+                inp=input("What character should it be replaced with?\n")
+            letter=inp
+            inp=input(f'Type (Y) to add mapping "{cipherL} -> {letter}"\n')
+            if(inp=="Y"):
+                # Following statements account for the fact mapping is 1 to 1 operation
+                if(cipherL in mapping):
+                    if(letter in invMapping):
+                        mapping[invMapping[letter]]=mapping[cipherL]
+                        mapping[cipherL]=letter
+                        invMapping={v: k for k, v in mapping.items()}
+                    else:
+                        mapping[cipherL]=letter
+                        invMapping={v: k for k, v in mapping.items()}
                 else:
-                    mapping[cipherL]=letter
-                    invMapping={v: k for k, v in mapping.items()}
+                    if(letter in invMapping):
+                        invMapping[letter]=cipherL
+                        mapping={v: k for k, v in invMapping.items()}
+                    else:
+                        mapping[cipherL]=letter
+                        invMapping[letter]=cipherL
+                    
+                print("Added Mapping\n")
             else:
-                if(letter in invMapping):
-                    invMapping[letter]=cipherL
-                    mapping={v: k for k, v in invMapping.items()}
-                else:
-                    mapping[cipherL]=letter
-                    invMapping[letter]=cipherL
-                
-            print("Added Mapping\n")
-        else:
-            print("Cancelled Mapping\n")
+                print("Cancelled Mapping\n")
     # frqanal.sortedFreq(mapping, True)
 
 if __name__ == '__main__':
