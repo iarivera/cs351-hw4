@@ -23,16 +23,16 @@ def main():
     char_dict = frqanal.charAnalysis(text)
     frq = frqanal.sortedFreq(char_dict, True)
 
-    # replace characters by frequency. Allow for the choice of how many letters should be replaced as lower frequency letters can produce inconsistent results
-    # Letter Frequency Order: 'ETAOINSHRDLCUMWFGYPBVKJXQZ'  Gotten from:https://en.wikipedia.org/wiki/Letter_frequency
     mapping={}
     invMapping={}
     inp=""
+    # replace characters by frequency. Allow for the choice of how many letters should be replaced as lower frequency letters can produce inconsistent results
     while(not inp.isnumeric() or inp=="" or int(inp)>26):
         inp=input("Input how many letters to replace in the cipher (1-26)")
     inp=int(inp)
     print("Mappings:")
     for i in range(inp):
+        # Letter frequency order gotten from:https://en.wikipedia.org/wiki/Letter_frequency
         letter = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'[i]
         cipherL=frq[i][0]
         mapping[cipherL]=letter
@@ -64,6 +64,7 @@ def main():
                 if(letter in invMapping):
                     mapping[invMapping[letter]]=mapping[cipherL]
                     mapping[cipherL]=letter
+                    invMapping={v: k for k, v in mapping.items()}
                 else:
                     mapping[cipherL]=letter
                     invMapping={v: k for k, v in mapping.items()}
