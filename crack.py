@@ -36,12 +36,13 @@ def main(stdscr):
     # calculate frequency of each letter in ciphertext
     char_dict = frqanal.charAnalysis(text)
     frq = frqanal.sortedFreq(char_dict, False)
-    frqwin = curses.newwin(30, 34, 3, 0)
+    frqwin = curses.newwin(30, 34, 5, 1)
+    rectangle(stdscr, 3, 0, 31, 35)
     #frqwin.border()
     #frqwin.refresh()
     for i, item in enumerate(frq):
-        frqwin.addstr(i, 0, str(item))
-    frqwin.refresh()
+        stdscr.addstr(i + 4, 1, str(item))
+    stdscr.refresh()
 
     mapping={}
     invMapping={}
