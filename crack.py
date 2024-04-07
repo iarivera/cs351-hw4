@@ -3,7 +3,7 @@
 import sys
 import json
 import frqanal
-
+import string
 # most common characters in english, in order:
 # ETAOINSHRDL
 
@@ -23,14 +23,62 @@ def main():
     char_dict = frqanal.charAnalysis(text)
     frq = frqanal.sortedFreq(char_dict, True)
 
-    # replace first four characters by frequency
-    for i in range(4):
-        letter = 'ETAO'[i]
-        text = frqanal.replace(text, letter, frq[i][0])
-        char_dict = frqanal.charAnalysis(text)
-        frq = frqanal.sortedFreq(char_dict)
-    print(text)
-    frqanal.sortedFreq(char_dict, True)
+    # replace characters by frequency. Allow for the choice of how many letters should be replaced as lower frequency letters can produce inconsistent results
+    # Letter Frequency Order: 'ETAOINSHRDLCUMWFGYPBVKJXQZ'  Gotten from:https://en.wikipedia.org/wiki/Letter_frequency
+    mapping={}
+    invMapping={}
+    inp=""
+    while(not inp.isnumeric() or inp=="" or int(inp)>26):
+        inp=input("Input how many letters to replace in the cipher (1-26)")
+    inp=int(inp)
+    print("Mappings:")
+    for i in range(inp):
+        letter = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'[i]
+        cipherL=frq[i][0]
+        mapping[cipherL]=letter
+        invMapping[letter]=cipherL
+        print(f"{cipherL}->{letter}")
+        # char_dict = frqanal.charAnalysis(text)
+        # frq = frqanal.sortedFreq(char_dict)
+
+
+    while(True):
+        print("\nCurrent Ciphertext:\n"+frqanal.replace(text, mapping))
+        print("Original Ciphertext:\n"+text)
+        while(inp!="2" and inp!="1"):
+            inp=input("What would you like to do now?\n (1) New Mapping\n (2) Done\n")
+        if(inp=="2"):
+            exit()
+
+        while(not (inp in string.ascii_uppercase) or inp==""):
+            inp=input("What cipher character are you replacing?\n")
+        cipherL=inp
+        inp=""
+        while(not (inp in string.ascii_uppercase) or inp==""):
+            inp=input("What character should it be replaced with?\n")
+        letter=inp
+        inp=input(f'Type (Y) to add mapping "{cipherL} -> {letter}"\n')
+        if(inp=="Y"):
+            # Following statements account for the fact mapping is 1 to 1 operation
+            if(cipherL in mapping):
+                if(letter in invMapping):
+                    mapping[invMapping[letter]]=mapping[cipherL]
+                    mapping[cipherL]=letter
+                else:
+                    mapping[cipherL]=letter
+                    invMapping={v: k for k, v in mapping.items()}
+            else:
+                if(letter in invMapping):
+                    invMapping[letter]=cipherL
+                    mapping={v: k for k, v in invMapping.items()}
+                else:
+                    mapping[cipherL]=letter
+                    invMapping[letter]=cipherL
+                
+            print("Added Mapping\n")
+        else:
+            print("Cancelled Mapping\n")
+    # frqanal.sortedFreq(mapping, True)
 
 if __name__ == '__main__':
     main()
