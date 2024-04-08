@@ -134,6 +134,7 @@ def main():
     display_frequencies(frq)
 
     mapping = {}
+    invMapping={}
     inp = ""
 
     # Get user input for number of letters to replace
@@ -144,8 +145,9 @@ def main():
     # Obtain mappings from user input
     for i in range(inp):
         letter = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'[i]
-        cipherL = frq[i][0]
-        mapping[cipherL] = letter
+        cipher_char = frq[i][0]
+        mapping[cipher_char] = letter
+        invMapping[letter]= cipher_char
 
     # Display mappings
     turtle.penup()
@@ -169,8 +171,24 @@ def main():
 
             # Confirm mapping | ensure that there is a one to one replacement
             confirm = get_user_input(f'Type (Y) to add mapping "{cipher_char} -> {replacement_char}"')
-            if confirm == "Y":
-                mapping[cipher_char] = replacement_char
+            if confirm.capitalize() == "Y":
+                #Since mapping is 1 to 1, logic avoids duplicate mappings
+                if(cipher_char in mapping):
+                    # Swaps making if ciphertext and mapping are both in dictionary
+                    if(replacement_char in invMapping):
+                        mapping[invMapping[replacement_char]]=mapping[cipher_char]
+                        mapping[cipher_char]=replacement_char
+                        invMapping={v: k for k, v in mapping.items()}
+                    else:
+                        mapping[cipher_char]=replacement_char
+                        invMapping={v: k for k, v in mapping.items()}
+                else:
+                    if(replacement_char in invMapping):
+                        invMapping[replacement_char]=cipher_char
+                        mapping={v: k for k, v in invMapping.items()}
+                    else:
+                        mapping[cipher_char]=replacement_char
+                        invMapping[replacement_char]=cipher_char
                 turtle.clear()
                 turtle.penup()
                 turtle.goto(-200, -200)
