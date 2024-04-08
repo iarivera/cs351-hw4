@@ -1,31 +1,34 @@
+"""
+Step 2: Frequency Analysis
+    takes in a string [text] and returns a dictionary containing the frequencies of each letter
+"""
 import string
-import json
 
-# returns dict from characters in string
+# gather letter frequencies in a text and save values to dictionary (key, letter -> value, frequency) 
 def charAnalysis(text):
+    # initialize an empty dictionary [d], a character count [totChar], and uppercase each character for consistency [text]
     d = {}
     totChar=0
     text = text.upper()
+
+    # iterate through each charater, update totChar, counting and storing the frequecy in a dictionary
     for char in string.ascii_uppercase:
         totChar+=text.count(char)
         d[char] = text.count(char)
     for key in list(d):
         d[key]=(d[key]/totChar*100, d[key])
+
     return d
 
-def sortedFreq(d, PRINT=False):
+# sorting the frequenceies in descending order | printing letter, precentage, and count
+def sortedFreq(d):
     ret = sorted(d.items(), key=lambda item: item[1][1], reverse=True)
-    if PRINT:
-        for k, v in ret:
-            #print(f"\033[4m{k}:\033[0m {v}"
-            print(f"{k}:  {v[0]:5.2f}%  {v[1]:2n}")
-    return ret
+    formatted_strings = []
+    for k, v in ret:
+        formatted_strings.append(f"{k}: {v[0]:5.2f}%  {v[1]:2n}")
+    return formatted_strings
 
-# def replace(text, char1, char2):
-#     text = text.replace(char1, 'a') # all ciphers are upper
-#     text = text.replace(char2, char1)
-#     text = text.replace('a', char2)
-#     return text
+# replace the characters based on frequency and mapping
 def replace(text, mapping):
     newText=""
     for i in text:
